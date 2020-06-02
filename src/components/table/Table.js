@@ -1,9 +1,11 @@
 import {ExcelComponent} from '@core/ExcelComponent';
 import {TableSelection} from './TableSelection'
+import {$} from '@core/dom'
 
 import {resizeHandler} from './table.resize';
 import {createTable} from './table.template';
 import {showResize} from './table.functions';
+import {isCell} from './table.functions';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table';
@@ -23,7 +25,7 @@ export class Table extends ExcelComponent {
     super.init()
 
     const $cell = this.$root.find('[data-id="0:0"]')
-    $cell.addClass('selected')
+    this.selection.select($cell)
   }
 
   toHTML() {
@@ -33,6 +35,9 @@ export class Table extends ExcelComponent {
   onMousedown(event) {
     if (showResize(event)) {
       resizeHandler(this.$root, event);
+    } else if (isCell(event)) {
+      const $target = $(event.target)
+      this.selection.select($target)
     }
   }
 }

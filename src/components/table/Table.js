@@ -14,7 +14,7 @@ export class Table extends ExcelComponent {
   constructor($root) {
     super($root, {
       name: 'Table',
-      listeners: ['mousedown'],
+      listeners: ['mousedown', 'keydown'],
     });
   }
 
@@ -50,5 +50,47 @@ export class Table extends ExcelComponent {
       }
     }
   }
+
+  onKeydown(event) {
+    const keys = [
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Tab'
+    ]
+
+    const { key } = event
+
+    if (keys.includes(key) && !event.shiftKey) {
+      event.preventDefault()
+      const id = this.selection.current.id(true)
+      const $next = this.$root.find(nextSelection(key, id))
+      this.selection.select($next)
+    }
+  }
 }
 
+function nextSelection(key, {row, col}) {
+  const MIN_VALUE = 0
+  switch (key) {
+    case 'Enter':
+    case 'ArrowDown':
+      row++
+      break;
+    case 'ArrowRight':
+    case 'Tab':
+      col++
+      break;
+    case 'ArrowLeft':
+      col = col - 1 < MIN_VALUE ? MIN_VALUE : col - 1
+      break;
+    case 'ArrowUp':
+      row = row - 1 < MIN_VALUE ? MIN_VALUE : row - 1
+      break;
+    default:
+      break;
+  }
+  return `[data-id="${row}:${col}"]`
+}

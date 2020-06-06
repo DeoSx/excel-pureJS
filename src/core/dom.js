@@ -14,6 +14,10 @@ class Dom {
     return this.$el.outerHTML.trim();
   }
 
+  text(text) {
+    return this.$el.textContent = text
+  }
+
   clear() {
     this.$el.innerHTML = '';
     return this;

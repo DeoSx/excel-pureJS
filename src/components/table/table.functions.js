@@ -17,3 +17,26 @@ export function matrix(current, target) {
     return acc
   }, [])
 }
+
+export function nextSelection(key, {row, col}) {
+  const MIN_VALUE = 0
+  switch (key) {
+    case 'Enter':
+    case 'ArrowDown':
+      row++
+      break;
+    case 'ArrowRight':
+    case 'Tab':
+      col++
+      break;
+    case 'ArrowLeft':
+      col = col - 1 < MIN_VALUE ? MIN_VALUE : col - 1
+      break;
+    case 'ArrowUp':
+      row = row - 1 < MIN_VALUE ? MIN_VALUE : row - 1
+      break;
+    default:
+      break;
+  }
+  return `[data-id="${row}:${col}"]`
+}

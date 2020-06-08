@@ -9,7 +9,7 @@ import {isCell} from './table.functions'
 import {matrix} from './table.functions'
 import {nextSelection} from './table.functions'
 import * as actions from '@/redux/actions'
-import {storage} from '@/core/utils'
+
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'

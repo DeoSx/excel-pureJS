@@ -1,23 +1,23 @@
-import {ExcelComponent} from '@core/ExcelComponent';
+import {ExcelComponent} from '@core/ExcelComponent'
 import {TableSelection} from './TableSelection'
 import {$} from '@core/dom'
 
-import {resizeHandler} from './table.resize';
-import {createTable} from './table.template';
-import {showResize} from './table.functions';
-import {isCell} from './table.functions';
-import {matrix} from './table.functions';
+import {resizeHandler} from './table.resize'
+import {createTable} from './table.template'
+import {showResize} from './table.functions'
+import {isCell} from './table.functions'
+import {matrix} from './table.functions'
 import {nextSelection} from './table.functions'
 
 export class Table extends ExcelComponent {
-  static className = 'excel__table';
+  static className = 'excel__table'
 
   constructor($root, options) {
     super($root, {
       name: 'Table',
       listeners: ['mousedown', 'keydown', 'input'],
       ...options
-    });
+    })
   }
 
   prepare() {
@@ -34,6 +34,9 @@ export class Table extends ExcelComponent {
     this.$on('formula:done', () => {
       this.selection.current.focus()
     })
+    this.$subscribe(state => {
+      console.log('tableState', state)
+    })
   }
 
   toHTML() {
@@ -45,12 +48,20 @@ export class Table extends ExcelComponent {
     this.$emit('table:select', $cell)
   }
 
+  async resizeTable(event) {
+    try {
+      const data = await resizeHandler(this.$root, event)
+      this.$dispatch({type: 'TABLE_RESIZE', data})
+    } catch (e) {
+      console.warn('Resize error', e.message)
+    }
+  }
+
   onMousedown(event) {
     if (showResize(event)) {
-      resizeHandler(this.$root, event);
+      this.resizeTable(event)
     } else if (isCell(event)) {
       const $target = $(event.target)
-      this.$emit('table:click', $target)
       if (event.shiftKey) {
         const target = $target.id(true)
         const current = this.selection.current.id(true)
@@ -59,7 +70,7 @@ export class Table extends ExcelComponent {
             .map(id => this.$root.find(`[data-id="${id}"]`))
         this.selection.selectGroup($cells)
       } else {
-        this.selection.select($target)
+        this.cellSelect($target)
       }
     }
   }

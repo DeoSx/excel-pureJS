@@ -1,19 +1,19 @@
-import {$} from '@core/dom';
+import {$} from '@core/dom'
 
 export function resizeHandler($root, event) {
   return new Promise(resolve => {
-    const $resizer = $(event.target);
-    const $parent = $resizer.closest('[data-type="resizable"]');
-    const coords = $parent.getCoords();
+    const $resizer = $(event.target)
+    const $parent = $resizer.closest('[data-type="resizable"]')
+    const coords = $parent.getCoords()
 
-    const type = $resizer.data.resize;
-    let value;
-    const sideProp = type === 'col' ? 'bottom' : 'right';
+    const type = $resizer.data.resize
+    let value
+    const sideProp = type === 'col' ? 'bottom' : 'right'
 
     $resizer.css({
       opacity: 1,
-      [sideProp]: '-5000px',
-    });
+      [sideProp]: '-5000px'
+    })
 
     document.onmousemove = (e) => {
       if (type === 'col') {

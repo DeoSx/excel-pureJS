@@ -13,7 +13,6 @@ import './scss/index.scss'
 const store = createStore(rootReducer, initialState)
 
 store.subscribe(state => {
-  console.log('App State', state)
   storage('excel-state', state)
 })
 
